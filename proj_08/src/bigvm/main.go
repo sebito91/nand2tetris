@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bigvm/lexer"
+	"bigvm/processor"
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -8,8 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"uchicago/bigvm/lexer"
-	"uchicago/bigvm/processor"
 )
 
 // handleInit is local var to make sure we've added the necessary logic to start functions

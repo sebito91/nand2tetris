@@ -2,13 +2,13 @@
 package processor
 
 import (
+	"bigvm/lexer"
 	"bytes"
 	"fmt"
 	"log"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"uchicago/bigvm/lexer"
 )
 
 // jumpCounter is a horrible hack to iterate the number of jumps we encounter throughout
