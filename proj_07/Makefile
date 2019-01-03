@@ -4,9 +4,11 @@ ifeq ($(OS),Windows_NT)
 	BINARYENDING = .exe
 endif
 
+CURRENTDIR      := $(shell pwd)
+
 all: clean
 	mkdir ./build
-	go build -v -o ./build/$(BINARYNAME)$(BINARYENDING) ./src/vm/main.go
+	export GOPATH=$(CURRENTDIR) && go build -v -o ./build/$(BINARYNAME)$(BINARYENDING) ./src/vm/main.go
 
 .PHONY: clean
 clean:
