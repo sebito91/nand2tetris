@@ -2,15 +2,15 @@ package main
 
 import (
 	"bytes"
+	"compiler/lexer"
+	"compiler/parser"
+	"compiler/tokenizer"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"uchicago/compiler/lexer"
-	"uchicago/compiler/parser"
-	"uchicago/compiler/tokenizer"
 )
 
 func main() {
