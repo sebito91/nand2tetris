@@ -1,0 +1,157 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux8Way.hdl
+
+/**
+ * 8-way demultiplexor:
+ * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
+ *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
+ *                            etc.
+ *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
+ */
+
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+    Not(in=sel[0], out=notsel0);
+    Not(in=sel[1], out=notsel1);
+    Not(in=sel[2], out=notsel2);
+
+    And(a=notsel0, b=notsel1, out=sela0);
+    And(a=sela0, b=notsel2, out=sela);
+
+    And(a=sel[0], b=notsel1, out=selb0);
+    And(a=selb0, b=notsel2, out=selb);
+
+    And(a=notsel0, b=sel[1], out=selc0);
+    And(a=selc0, b=notsel2, out=selc);
+
+    And(a=sel[0], b=sel[1], out=seld0);
+    And(a=seld0, b=notsel2, out=seld);
+
+    And(a=sel[2], b=sela0, out=sele);
+    And(a=sel[2], b=selb0, out=self);
+    And(a=sel[2], b=selc0, out=selg);
+    And(a=sel[2], b=seld0, out=selh);
+
+    And(a=in, b=sela, out=a);
+    And(a=in, b=selb, out=b);
+    And(a=in, b=selc, out=c);
+    And(a=in, b=seld, out=d);
+    And(a=in, b=sele, out=e);
+    And(a=in, b=self, out=f);
+    And(a=in, b=selg, out=g);
+    And(a=in, b=selh, out=h);
+
+//    /* NAND implementation */
+//    Nand(a=sel[0], b=sel[0], out=notsel0);
+//    Nand(a=sel[1], b=sel[1], out=notsel1);
+//    Nand(a=sel[2], b=sel[2], out=notsel2);
+//
+//    /* sel = 000 */
+//    Nand(a=notsel0, b=notsel1, out=sela00);
+//    Nand(a=notsel0, b=notsel1, out=sela01);
+//    Nand(a=sela00, b=sela01, out=sela02);
+//
+//    Nand(a=notsel2, b=sela02, out=sela03);
+//    Nand(a=notsel2, b=sela02, out=sela04);
+//    Nand(a=sela03, b=sela04, out=sela05);
+//
+//    Nand(a=in, b=sela05, out=sela06);
+//    Nand(a=in, b=sela05, out=sela07);
+//    Nand(a=sela06, b=sela07, out=a);
+//
+//    /* sel = 001 */
+//    Nand(a=sel[0], b=notsel1, out=selb00);
+//    Nand(a=sel[0], b=notsel1, out=selb01);
+//    Nand(a=selb00, b=selb01, out=selb02);
+//
+//    Nand(a=notsel2, b=selb02, out=selb03);
+//    Nand(a=notsel2, b=selb02, out=selb04);
+//    Nand(a=selb03, b=selb04, out=selb05);
+//
+//    Nand(a=in, b=selb05, out=selb06);
+//    Nand(a=in, b=selb05, out=selb07);
+//    Nand(a=selb06, b=selb07, out=b);
+//
+//    /* sel = 010 */
+//    Nand(a=notsel0, b=sel[1], out=selc00);
+//    Nand(a=notsel0, b=sel[1], out=selc01);
+//    Nand(a=selc00, b=selc01, out=selc02);
+//
+//    Nand(a=notsel2, b=selc02, out=selc03);
+//    Nand(a=notsel2, b=selc02, out=selc04);
+//    Nand(a=selc03, b=selc04, out=selc05);
+//
+//    Nand(a=in, b=selc05, out=selc06);
+//    Nand(a=in, b=selc05, out=selc07);
+//    Nand(a=selc06, b=selc07, out=c);
+//
+//    /* sel = 011 */
+//    Nand(a=sel[0], b=sel[1], out=seld00);
+//    Nand(a=sel[0], b=sel[1], out=seld01);
+//    Nand(a=seld00, b=seld01, out=seld02);
+//
+//    Nand(a=notsel2, b=seld02, out=seld03);
+//    Nand(a=notsel2, b=seld02, out=seld04);
+//    Nand(a=seld03, b=seld04, out=seld05);
+//
+//    Nand(a=in, b=seld05, out=seld06);
+//    Nand(a=in, b=seld05, out=seld07);
+//    Nand(a=seld06, b=seld07, out=d);
+//
+//    /* sel = 100 */
+//    Nand(a=notsel0, b=notsel1, out=sele00);
+//    Nand(a=notsel0, b=notsel1, out=sele01);
+//    Nand(a=sele00, b=sele01, out=sele02);
+//
+//    Nand(a=sel[2], b=sele02, out=sele03);
+//    Nand(a=sel[2], b=sele02, out=sele04);
+//    Nand(a=sele03, b=sele04, out=sele05);
+//
+//    Nand(a=in, b=sele05, out=sele06);
+//    Nand(a=in, b=sele05, out=sele07);
+//    Nand(a=sele06, b=sele07, out=e);
+//
+//    /* sel = 101 */
+//    Nand(a=sel[0], b=notsel1, out=self00);
+//    Nand(a=sel[0], b=notsel1, out=self01);
+//    Nand(a=self00, b=self01, out=self02);
+//
+//    Nand(a=sel[2], b=self02, out=self03);
+//    Nand(a=sel[2], b=self02, out=self04);
+//    Nand(a=self03, b=self04, out=self05);
+//
+//    Nand(a=in, b=self05, out=self06);
+//    Nand(a=in, b=self05, out=self07);
+//    Nand(a=self06, b=self07, out=f);
+//
+//    /* sel = 110 */
+//    Nand(a=notsel0, b=sel[1], out=selg00);
+//    Nand(a=notsel0, b=sel[1], out=selg01);
+//    Nand(a=selg00, b=selg01, out=selg02);
+//
+//    Nand(a=sel[2], b=selg02, out=selg03);
+//    Nand(a=sel[2], b=selg02, out=selg04);
+//    Nand(a=selg03, b=selg04, out=selg05);
+//
+//    Nand(a=in, b=selg05, out=selg06);
+//    Nand(a=in, b=selg05, out=selg07);
+//    Nand(a=selg06, b=selg07, out=g);
+//
+//    /* sel = 111 */
+//    Nand(a=sel[0], b=sel[1], out=selh00);
+//    Nand(a=sel[0], b=sel[1], out=selh01);
+//    Nand(a=selh00, b=selh01, out=selh02);
+//
+//    Nand(a=sel[2], b=selh02, out=selh03);
+//    Nand(a=sel[2], b=selh02, out=selh04);
+//    Nand(a=selh03, b=selh04, out=selh05);
+//
+//    Nand(a=in, b=selh05, out=selh06);
+//    Nand(a=in, b=selh05, out=selh07);
+//    Nand(a=selh06, b=selh07, out=h);
+}

@@ -1,0 +1,39 @@
+class Utils {
+    constructor Utils new() {
+        do Output.printString("CONSTRUCTING!");
+        do Output.println();
+
+        return this;
+    }
+
+    // computes x mod y
+    method int mod(int x, int y) {
+        var int tmp;
+
+        if (y > x) {
+            return x;
+        }
+        
+        if (y < 0) {
+            return 0;
+        }
+
+        if (y = 0) {
+            return 0;
+        }
+  
+        let tmp = x - y;
+        if (tmp < 0) {
+             return x;
+        }        
+
+        return mod(tmp, y);
+    }
+
+    // destroy the utils class 
+    method void done() {
+        do Memory.deAlloc(this);
+
+        return;
+    }
+}

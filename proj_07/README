@@ -1,0 +1,47 @@
+# Project 7 -- Virtual Machine, Part 1
+
+## NOTES
+
+I've continued to use golang for my implementation and have included a Makefile that _should_ build the binary
+required for the proper environment. You will need to have golang installed as a prerequisite (the linux
+cluster has this installed), and simply running `make` should build the binary for you.
+
+https://piazza.com/class/jmrqk4jynq247k?cid=54
+
+I have included a built version of the binary for linux (for the cluster), but if you're using another
+environment please consult the Makefile. If this doesn't work, please let me know and
+I will be happy to help out.
+
+### Functionality
+
+This version of the binary only accepts a single file as input and processes each command into Hack assembly
+language. If any of the lines is incorrect, or fails to parse, the entire process will exit with an (hopefully useful)
+error message.
+
+Output will be in the form of `*.asm` in the folder where the source was provided. The output files
+should contains valid Hack assembly code for the provided vm code.
+
+### Design/Layout
+
+I've split the functionality into two sub-packages from the initial Project 6 design: lexer and processor.
+
+The `lexer` handles the initial processing of the vm code and largely exists to remove extraneous whitespace.
+
+The `processor` package handles the actual split of vm language into individual components for building into valid
+Hack assembly language.  These follow along the Hack protocol lines and should be completely
+functional (and feature-complete) with the `CPUEmulator.sh` provided assembly code.
+
+### Files
+
+- main.go                -- primary source code for binary
+- vm i                   -- compiled, statically linked binary without external dependencies beyond stdlib
+- lexer/lexer.go         -- lexical analysis of the code, creating symbol tables, etc
+- processor/processor.go -- process each individual line of virtual machine code into valid Hack assembly
+- processor/utils.go     -- utility code to help in the vm language translation to assembly, mosty just consts
+- Makefile               -- file to help clean and/or build binary
+- README                 -- this file
+
+### Building the code
+
+Using the `make` syntax, based on your OS you'll see the binary in ./build. If windows, it _should_ compile to
+`vm.exe` while non-windows builds will be named `vm`

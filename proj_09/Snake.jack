@@ -1,0 +1,143 @@
+class Snake {
+    field Board board;
+
+    field int score, direction, result;
+    field boolean playing;
+
+    // create a new board with a single-bodied snake to start
+    constructor Snake new() {
+        let board = Board.new(0, 0, 12);
+        let direction = 0;  // initial state is no movement
+        let score = 0;
+
+        return this;
+    }
+
+    // computes x mod y
+    method int mod(int x, int y) {
+        var int tmp;
+
+        if (y > x) {
+            return x;
+        }
+        
+        if (y < 0) {
+            return 0;
+        }
+
+        if (y = 0) {
+            return 0;
+        }
+  
+        let tmp = x - y;
+        if (tmp < 0) {
+             return x;
+        }        
+
+        return mod(tmp, y);
+    }
+
+    // print a welcome message to the screen
+    method void welcome() {
+        do Output.printString("The Great Canadian Snake Challenge!");
+        do Output.println();      // New line
+        do Output.printString("WELCOME!");
+        do Output.println();
+        do Output.println();
+        do Output.println();
+        do Output.println();
+
+        do Output.printString("To move use the arrow keys...");
+        do Output.println();
+        do Output.printString("As you eat food pellets, your snake's body will begin to grow!");
+        do Output.println();
+        do Output.println();
+
+        do Output.printString("But be careful not to run into the landmines, or your own body!");
+        do Output.println();
+
+        do Output.printString("Press any key to begin the game..");
+        do Output.println();
+
+        return;
+    }
+
+    // run the actual game
+    // users will need to press the arrow keys to move the snake
+    // as they progress each move adds 10 points to their score
+    // if they hit a landmine or their own body, doMove will return true and the game will exit 
+    method void run() {
+         var char key;  // the key currently pressed by the user
+         var boolean exit;
+         var int result;
+         let exit = false;
+
+         // clear the screen
+         do board.clear();
+         do board.draw();
+     
+         while (~exit) {
+             // waits for a key to be pressed
+             while (key = 0) {
+                 let key = Keyboard.keyPressed();
+                 let result = moveSnake();
+             }
+
+             let key = Keyboard.keyPressed();
+             let result = moveSnake(); 
+
+             if (result < 0) { 
+                 let exit = true; 
+             } else {
+                 let score = score + result;
+
+                 if (key = 81) { 
+                     let exit = true; 
+                 } else { 
+                     if (key = 131) { let direction = 1; }   // up arrow
+                     if (key = 133) { let direction = 2; }   // down arrow
+                     if (key = 130) { let direction = 3; }   // left arrow
+                     if (key = 132) { let direction = 4; }   // right arrow
+                 
+                     let result = mod(score, 100); 
+                     if (result > 70) {
+                         do board.drawLandmine();
+                     }
+
+                     if (result > 80) {
+                         do board.drawPellet();
+                     }
+                 }
+             }
+         }
+
+         do Output.printString("GAME OVER! Your score is: ");
+         do Output.printInt(score);
+         do Output.println();
+
+         return;
+    }
+
+    // destroy the game 
+    method void done() {
+        do board.done();
+        do Memory.deAlloc(this);
+
+        return;
+    }
+
+    // move the snake as needed 
+    method int moveSnake() {
+        var int result;
+
+        let result = 0;
+        if (direction = 1) { let result = board.moveUp(); }
+        if (direction = 2) { let result = board.moveDown(); }
+        if (direction = 3) { let result = board.moveLeft(); }
+        if (direction = 4) { let result = board.moveRight(); } 
+
+        do Sys.wait(5);  // delays the next movement
+
+        return result;
+    }
+}

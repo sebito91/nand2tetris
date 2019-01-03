@@ -1,0 +1,122 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    /* **** BEGIN DECODE -- set up the control bits **** */
+    Not(in=instruction[15], out=notinst15);
+
+    /* define setareg, set the A register */
+    Or(a=notinst15, b=instruction[5], out=setareg);
+    Not(in=setareg, out=notsetareg);
+
+    /* define setdreg, set the D register */
+    And(a=instruction[15], b=instruction[4], out=setdreg);
+    Not(in=setdreg, out=notsetdreg);
+
+    /* define writem, flag to write to memory */
+    And(a=instruction[15], b=instruction[3], out=writeM);
+
+    /* define not zr and not ng */
+    Not(in=zr, out=notzr);
+    Not(in=ng, out=notng);
+
+    /* define jlt, jump less than */
+    And(a=instruction[15], b=instruction[2], out=j1);
+    And(a=j1, b=ng, out=jlt);
+
+    /* define jeq, jump equal */
+    And(a=instruction[15], b=instruction[1], out=j2);
+    And(a=j2, b=zr, out=jeq);
+
+    /* define jgt, jump greater than */
+    And(a=instruction[15], b=instruction[0], out=j3);
+    And(a=notzr, b=notng, out=j4);
+    And(a=j3, b=j4, out=jgt);
+
+    /* define jge, jump greater than or equal */
+    Or(a=jgt, b=jeq, out=jge);
+
+    /* define jne, jump not equal */
+    Or(a=jgt, b=jlt, out=jne);
+
+    /* define jle, jump less than or equal */
+    Or(a=jlt, b=jeq, out=jle);
+
+    /* define the jump signals and their selection */
+    /* since the Mux8Way doesn't exist, I'm implementing here */
+    /* Mux8Way(a=false, b=jgt, c=jeq, d=jge, e=jlt, f=jne, g=jle, h=true, sel=instruction[0..2], out=jmpout); */
+    Mux(a=false, b=jgt, sel=instruction[0], out=mux0);
+    Mux(a=jeq, b=jge, sel=instruction[0], out=mux1);
+    Mux(a=jlt, b=jne, sel=instruction[0], out=mux2);
+    Mux(a=jle, b=true, sel=instruction[0], out=mux3);
+
+    Mux(a=mux0, b=mux1, sel=instruction[1], out=mux4);
+    Mux(a=mux2, b=mux3, sel=instruction[1], out=mux5);
+
+    Mux(a=mux4, b=mux5, sel=instruction[2], out=muxjmpout);
+
+    /* skip jmp if we're an A instruction! */
+    Mux(a=false, b=muxjmpout, sel=instruction[15], out=jmpout);
+
+    /* instr[15] is the output from ALU or incoming instruction sel for mux */
+    /* instr[12] is the A or M sel input for mux */
+    /* instr[6..11] is the select set for the ALU */
+    /* zr, if output from ALU is zero */
+    /* ng, if output from ALU is < 0 */
+    /* **** END DECODE **** */
+
+    /* **** BEGIN LOGIC **** */
+    /* select input to mux for ALU or instruction, set output from A reg */
+    Mux16(a=instruction, b=inD, sel=instruction[15], out=aluorinst);
+    ARegister(in=aluorinst, load=setareg, out=aregout, out[0..14]=addressM);
+
+    /* define the D register */
+    DRegister(in=inD, load=setdreg, out=dregout);
+
+    /* select input to mux for A register or inM */
+    Mux16(a=aregout, b=inM, sel=instruction[12], out=aorinm);
+
+    /* define the ALU */
+    ALU(x=dregout, y=aorinm, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outM, out=inD, zr=zr, ng=ng);
+
+    /* define the PC */
+    PC(in=aregout, inc=true, load=jmpout, reset=reset, out[0..14]=pc); 
+    /* **** END LOGIC **** */
+}

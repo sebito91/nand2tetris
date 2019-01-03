@@ -1,0 +1,40 @@
+# Project 0 -- space trimming
+
+## NOTES
+
+I've used golang for my implementation and have included a Makefile that _should_ build the binary
+required for the proper environment. You will need to have golang installed as a prerequisite (the linux
+cluster has this installed), and simply running `make` should build the binary for you.
+
+https://piazza.com/class/jmrqk4jynq247k?cid=54
+
+I have included a built version of the binary for linux (for the cluster), but if you're using another
+environment please consult the Makefile. If this doesn't work, please let me know and
+I will be happy to help out.
+
+### Functionality
+
+The binary accepts the `no-comments` flag as the first optional argument after the binary name. If not specified,
+the binary skips handling comments prepended with `//`, but if provided it will strip these lines outright
+from the final file.
+
+Beyond that the binary accepts a space-delimited list of filenames and processes each in turn. If the
+file is not of type `*.in`, then process exits without processing any files. If all files pass the validation
+check in the beginning, each will be processed sequentially.
+
+### Design/Layout
+
+For now the functionality is all contained within an individual file. As the project grows I will
+move these functions to individual packages as necessary.
+
+### Files
+
+- main.go  -- primary source code for binary
+- spaces   -- compiled, statically linked binary without external dependencies beyond stdlib
+- Makefile -- file to help clean and/or build binary
+- README   -- this file
+
+### Building the code
+
+Using the `make` syntax, based on your OS you'll see the binary in ./build. If windows, it _should_ compile to
+`spaces.exe` while non-windows builds will be named `spaces`

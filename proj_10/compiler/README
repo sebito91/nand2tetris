@@ -1,0 +1,69 @@
+# Project 10 -- Syntax Analysis Part 1
+
+# NOTES
+
+Please note that this is the second submission for Project 10. I'm hoping you'd ignore the original
+set of binaries and just grade off this set which _should_ be working as expected now.
+
+I've continued to use golang for my implementation and have included a Makefile that _should_ build the binary
+required for the proper environment. You will need to have golang installed as a prerequisite (the linux
+cluster has this installed), and simply running `make` should build the binary for you.
+
+https://piazza.com/class/jmrqk4jynq247k?cid=54
+
+I have included a built version of the binary for linux (for the cluster), but if you're using another
+environment please consult the Makefile. If this doesn't work, please let me know and
+I will be happy to help out.
+
+Also, if you have any issues please cd to the folder and
+
+```
+unset GOPATH && export GOPATH=`pwd` && make
+```
+
+which should build the binary out for you properly.
+
+https://piazza.com/class/jmrqk4jynq247k?cid=315
+
+### Functionality
+
+This version of the binary expects a single `.jack` file or a path to a folder with many `.jack` files. In either
+case the binary wiill compile the jack commands into valid tokenized files as well as XML keyword output based on those
+tokens.
+
+Output will be in the form of `*T.xml` and `*.xml` for the tokenized and compiled versions respectively, all in the folder
+where the source was provided.
+
+### Design/Layout
+
+The content is split now into three parts:
+
+- lexer
+- tokenizer
+- parser (aka compiler)
+
+The `lexer` handles the initial processing of the vm code and largely exists to remove extraneous whitespace.
+
+The `tokenizer` translates the `.jack` code into tokens for the parser/compiler to use. These are currently XML
+values that distinguish tokens from one another.
+
+The `parser` package does most of the heavy lifting, converting the provided tokens into XML matching the Jack
+code spec. These will ultimately serve as input for the proper compiler to `.vm` code in the second part of this
+project.
+
+### Files
+
+- main.go                -- primary source code for binary
+- compiler               -- compiled, statically linked binary without external dependencies beyond stdlib
+- lexer/lexer.go         -- lexical analysis of the code, creating symbol tables, etc
+- parser/parser.go       -- process each individual line of virtual machine code into valid Hack assembly
+- parser/utils.go        -- utility code to help in the vm language translation to assembly, mosty just consts
+- tokenizer/processor.go -- process each individual line of virtual machine code into valid Hack assembly
+- tokenizer/utils.go     -- utility code to help in the vm language translation to assembly, mosty just consts
+- Makefile               -- file to help clean and/or build binary
+- README                 -- this file
+
+### Building the code
+
+Using the `make` syntax, based on your OS you'll see the binary in ./build. If windows, it _should_ compile to
+`vm.exe` while non-windows builds will be named `vm`

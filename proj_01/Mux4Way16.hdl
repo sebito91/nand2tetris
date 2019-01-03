@@ -1,0 +1,846 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux4Way16.hdl
+
+/**
+ * 4-way 16-bit multiplexor:
+ * out = a if sel == 00
+ *       b if sel == 01
+ *       c if sel == 10
+ *       d if sel == 11
+ */
+
+CHIP Mux4Way16 {
+    IN a[16], b[16], c[16], d[16], sel[2];
+    OUT out[16];
+
+    PARTS:
+    Mux16(a=a, b=c, sel=sel[1], out=selac);
+    Mux16(a=b, b=d, sel=sel[1], out=selbd);
+    Mux16(a=selac, b=selbd, sel=sel[0], out=out);
+    
+
+//    /* NAND Implementation */
+//    /* NOT sel[0] */
+//    Nand(a=sel[0], b=sel[0], out=notsel0);
+//
+//    /* NOT sel[1] */
+//    Nand(a=sel[1], b=sel[1], out=notsel1);
+//
+//    /* BEGIN a[0], b[0], c[0], d[0], out[0] */
+//    /* a[0] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela000);
+//    Nand(a=notsel0, b=notsel1, out=sela100);
+//    Nand(a=sela000, b=sela100, out=sela200);
+//
+//    Nand(a=sela200, b=a[0], out=sela0000);
+//    Nand(a=sela200, b=a[0], out=sela0100);
+//    Nand(a=sela0000, b=sela0100, out=sela0200);
+//
+//    /* b[0] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb000);
+//    Nand(a=sel[0], b=notsel1, out=selb100);
+//    Nand(a=selb000, b=selb000, out=selb200);
+//
+//    Nand(a=selb200, b=b[0], out=selb0000);
+//    Nand(a=selb200, b=b[0], out=selb0100);
+//    Nand(a=selb0000, b=selb0100, out=selb0200);
+//
+//    /* c[0] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc000);
+//    Nand(a=notsel0, b=sel[1], out=selc100);
+//    Nand(a=selc000, b=selc100, out=selc200);
+//
+//    Nand(a=selc200, b=c[0], out=selc0000);
+//    Nand(a=selc200, b=c[0], out=selc0100);
+//    Nand(a=selc0000, b=selc0100, out=selc0200);
+//
+//    /* d[0] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld000);
+//    Nand(a=sel[0], b=sel[1], out=seld100);
+//    Nand(a=seld000, b=seld100, out=seld200);
+//
+//    Nand(a=seld200, b=d[0], out=seld0000);
+//    Nand(a=seld200, b=d[0], out=seld0100);
+//    Nand(a=seld0000, b=seld0100, out=seld0200);
+//
+//    /* a[0] or b[0] or c[0] or d[0] */
+//    Nand(a=sela0200, b=sela0200, out=selab00000);
+//    Nand(a=selb0200, b=selb0200, out=selab01000);
+//    Nand(a=selab00000, b=selab01000, out=selab02000);
+//
+//    Nand(a=selc0200, b=selc0200, out=selcd00000);
+//    Nand(a=seld0200, b=seld0200, out=selcd01000);
+//    Nand(a=selcd00000, b=selcd01000, out=selcd02000);
+//
+//    Nand(a=selab02000, b=selab02000, out=selabcd00000);
+//    Nand(a=selcd02000, b=selcd02000, out=selabcd01000);
+//    Nand(a=selabcd00000, b=selabcd01000, out=out[0]);
+//    /* END a[0], b[0], c[0], d[0], out[0] */
+//
+//    /* BEGIN a[1], b[1], c[1], d[1], out[1] */
+//    /* a[1] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela001);
+//    Nand(a=notsel0, b=notsel1, out=sela101);
+//    Nand(a=sela001, b=sela101, out=sela201);
+//
+//    Nand(a=sela201, b=a[1], out=sela0001);
+//    Nand(a=sela201, b=a[1], out=sela0101);
+//    Nand(a=sela0001, b=sela0101, out=sela0201);
+//
+//    /* b[1] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb001);
+//    Nand(a=sel[0], b=notsel1, out=selb101);
+//    Nand(a=selb001, b=selb001, out=selb201);
+//
+//    Nand(a=selb201, b=b[1], out=selb0001);
+//    Nand(a=selb201, b=b[1], out=selb0101);
+//    Nand(a=selb0001, b=selb0101, out=selb0201);
+//
+//    /* c[1] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc001);
+//    Nand(a=notsel0, b=sel[1], out=selc101);
+//    Nand(a=selc001, b=selc101, out=selc201);
+//
+//    Nand(a=selc201, b=c[1], out=selc0001);
+//    Nand(a=selc201, b=c[1], out=selc0101);
+//    Nand(a=selc0001, b=selc0101, out=selc0201);
+//
+//    /* d[1] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld001);
+//    Nand(a=sel[0], b=sel[1], out=seld101);
+//    Nand(a=seld001, b=seld101, out=seld201);
+//
+//    Nand(a=seld201, b=d[1], out=seld0001);
+//    Nand(a=seld201, b=d[1], out=seld0101);
+//    Nand(a=seld0001, b=seld0101, out=seld0201);
+//
+//    /* a[1] or b[1] or c[1] or d[1] */
+//    Nand(a=sela0201, b=sela0201, out=selab00001);
+//    Nand(a=selb0201, b=selb0201, out=selab01001);
+//    Nand(a=selab00001, b=selab01001, out=selab02001);
+//
+//    Nand(a=selc0201, b=selc0201, out=selcd00001);
+//    Nand(a=seld0201, b=seld0201, out=selcd01001);
+//    Nand(a=selcd00001, b=selcd01001, out=selcd02001);
+//
+//    Nand(a=selab02001, b=selab02001, out=selabcd00001);
+//    Nand(a=selcd02001, b=selcd02001, out=selabcd01001);
+//    Nand(a=selabcd00001, b=selabcd01001, out=out[1]);
+//    /* END a[1], b[1], c[1], d[1], out[1] */
+//
+//    /* BEGIN a[2], b[2], c[2], d[2], out[2] */
+//    /* a[2] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela002);
+//    Nand(a=notsel0, b=notsel1, out=sela102);
+//    Nand(a=sela002, b=sela102, out=sela202);
+//
+//    Nand(a=sela202, b=a[2], out=sela0002);
+//    Nand(a=sela202, b=a[2], out=sela0102);
+//    Nand(a=sela0002, b=sela0102, out=sela0202);
+//
+//    /* b[2] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb002);
+//    Nand(a=sel[0], b=notsel1, out=selb102);
+//    Nand(a=selb002, b=selb002, out=selb202);
+//
+//    Nand(a=selb202, b=b[2], out=selb0002);
+//    Nand(a=selb202, b=b[2], out=selb0102);
+//    Nand(a=selb0002, b=selb0102, out=selb0202);
+//
+//    /* c[2] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc002);
+//    Nand(a=notsel0, b=sel[1], out=selc102);
+//    Nand(a=selc002, b=selc102, out=selc202);
+//
+//    Nand(a=selc202, b=c[2], out=selc0002);
+//    Nand(a=selc202, b=c[2], out=selc0102);
+//    Nand(a=selc0002, b=selc0102, out=selc0202);
+//
+//    /* d[2] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld002);
+//    Nand(a=sel[0], b=sel[1], out=seld102);
+//    Nand(a=seld002, b=seld102, out=seld202);
+//
+//    Nand(a=seld202, b=d[2], out=seld0002);
+//    Nand(a=seld202, b=d[2], out=seld0102);
+//    Nand(a=seld0002, b=seld0102, out=seld0202);
+//
+//    /* a[2] or b[2] or c[2] or d[2] */
+//    Nand(a=sela0202, b=sela0202, out=selab00002);
+//    Nand(a=selb0202, b=selb0202, out=selab01002);
+//    Nand(a=selab00002, b=selab01002, out=selab02002);
+//
+//    Nand(a=selc0202, b=selc0202, out=selcd00002);
+//    Nand(a=seld0202, b=seld0202, out=selcd01002);
+//    Nand(a=selcd00002, b=selcd01002, out=selcd02002);
+//
+//    Nand(a=selab02002, b=selab02002, out=selabcd00002);
+//    Nand(a=selcd02002, b=selcd02002, out=selabcd01002);
+//    Nand(a=selabcd00002, b=selabcd01002, out=out[2]);
+//    /* END a[2], b[2], c[2], d[2], out[2] */
+//
+//    /* BEGIN a[3], b[3], c[3], d[3], out[3] */
+//    /* a[3] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela003);
+//    Nand(a=notsel0, b=notsel1, out=sela103);
+//    Nand(a=sela000, b=sela100, out=sela203);
+//
+//    Nand(a=sela203, b=a[3], out=sela0003);
+//    Nand(a=sela203, b=a[3], out=sela0103);
+//    Nand(a=sela0003, b=sela0103, out=sela0203);
+//
+//    /* b[3] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb003);
+//    Nand(a=sel[0], b=notsel1, out=selb103);
+//    Nand(a=selb003, b=selb003, out=selb203);
+//
+//    Nand(a=selb203, b=b[3], out=selb0003);
+//    Nand(a=selb203, b=b[3], out=selb0103);
+//    Nand(a=selb0003, b=selb0103, out=selb0203);
+//
+//    /* c[3] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc003);
+//    Nand(a=notsel0, b=sel[1], out=selc103);
+//    Nand(a=selc003, b=selc103, out=selc203);
+//
+//    Nand(a=selc203, b=c[3], out=selc0003);
+//    Nand(a=selc203, b=c[3], out=selc0103);
+//    Nand(a=selc0003, b=selc0103, out=selc0203);
+//
+//    /* d[3] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld003);
+//    Nand(a=sel[0], b=sel[1], out=seld103);
+//    Nand(a=seld003, b=seld103, out=seld203);
+//
+//    Nand(a=seld203, b=d[3], out=seld0003);
+//    Nand(a=seld203, b=d[3], out=seld0103);
+//    Nand(a=seld0003, b=seld0103, out=seld0203);
+//
+//    /* a[3] or b[3] or c[3] or d[3] */
+//    Nand(a=sela0203, b=sela0203, out=selab00003);
+//    Nand(a=selb0203, b=selb0203, out=selab01003);
+//    Nand(a=selab00003, b=selab01003, out=selab02003);
+//
+//    Nand(a=selc0203, b=selc0203, out=selcd00003);
+//    Nand(a=seld0203, b=seld0203, out=selcd01003);
+//    Nand(a=selcd00003, b=selcd01003, out=selcd02003);
+//
+//    Nand(a=selab02003, b=selab02003, out=selabcd00003);
+//    Nand(a=selcd02003, b=selcd02003, out=selabcd01003);
+//    Nand(a=selabcd00003, b=selabcd01003, out=out[3]);
+//    /* END a[3], b[3], c[3], d[3], out[3] */
+//
+//    /* BEGIN a[4], b[4], c[4], d[4], out[4] */
+//    /* a[4] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela004);
+//    Nand(a=notsel0, b=notsel1, out=sela104);
+//    Nand(a=sela004, b=sela104, out=sela204);
+//
+//    Nand(a=sela204, b=a[4], out=sela0004);
+//    Nand(a=sela204, b=a[4], out=sela0104);
+//    Nand(a=sela0004, b=sela0104, out=sela0204);
+//
+//    /* b[4] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb004);
+//    Nand(a=sel[0], b=notsel1, out=selb104);
+//    Nand(a=selb004, b=selb004, out=selb204);
+//
+//    Nand(a=selb204, b=b[4], out=selb0004);
+//    Nand(a=selb204, b=b[4], out=selb0104);
+//    Nand(a=selb0004, b=selb0104, out=selb0204);
+//
+//    /* c[4] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc004);
+//    Nand(a=notsel0, b=sel[1], out=selc104);
+//    Nand(a=selc004, b=selc104, out=selc204);
+//
+//    Nand(a=selc204, b=c[4], out=selc0004);
+//    Nand(a=selc204, b=c[4], out=selc0104);
+//    Nand(a=selc0004, b=selc0104, out=selc0204);
+//
+//    /* d[4] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld004);
+//    Nand(a=sel[0], b=sel[1], out=seld104);
+//    Nand(a=seld004, b=seld104, out=seld204);
+//
+//    Nand(a=seld204, b=d[4], out=seld0004);
+//    Nand(a=seld204, b=d[4], out=seld0104);
+//    Nand(a=seld0004, b=seld0104, out=seld0204);
+//
+//    /* a[4] or b[4] or c[4] or d[4] */
+//    Nand(a=sela0204, b=sela0204, out=selab00004);
+//    Nand(a=selb0204, b=selb0204, out=selab01004);
+//    Nand(a=selab00004, b=selab01004, out=selab02004);
+//
+//    Nand(a=selc0204, b=selc0204, out=selcd00004);
+//    Nand(a=seld0204, b=seld0204, out=selcd01004);
+//    Nand(a=selcd00004, b=selcd01004, out=selcd02004);
+//
+//    Nand(a=selab02004, b=selab02004, out=selabcd00004);
+//    Nand(a=selcd02004, b=selcd02004, out=selabcd01004);
+//    Nand(a=selabcd00004, b=selabcd01004, out=out[4]);
+//    /* END a[4], b[4], c[4], d[4], out[4] */
+//
+//    /* BEGIN a[5], b[5], c[5], d[5], out[5] */
+//    /* a[5] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela005);
+//    Nand(a=notsel0, b=notsel1, out=sela105);
+//    Nand(a=sela005, b=sela105, out=sela205);
+//
+//    Nand(a=sela205, b=a[5], out=sela0005);
+//    Nand(a=sela205, b=a[5], out=sela0105);
+//    Nand(a=sela0005, b=sela0105, out=sela0205);
+//
+//    /* b[5] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb005);
+//    Nand(a=sel[0], b=notsel1, out=selb105);
+//    Nand(a=selb005, b=selb005, out=selb205);
+//
+//    Nand(a=selb205, b=b[5], out=selb0005);
+//    Nand(a=selb205, b=b[5], out=selb0105);
+//    Nand(a=selb0005, b=selb0105, out=selb0205);
+//
+//    /* c[5] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc005);
+//    Nand(a=notsel0, b=sel[1], out=selc105);
+//    Nand(a=selc005, b=selc105, out=selc205);
+//
+//    Nand(a=selc205, b=c[5], out=selc0005);
+//    Nand(a=selc205, b=c[5], out=selc0105);
+//    Nand(a=selc0005, b=selc0105, out=selc0205);
+//
+//    /* d[5] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld005);
+//    Nand(a=sel[0], b=sel[1], out=seld105);
+//    Nand(a=seld005, b=seld105, out=seld205);
+//
+//    Nand(a=seld205, b=d[5], out=seld0005);
+//    Nand(a=seld205, b=d[5], out=seld0105);
+//    Nand(a=seld0005, b=seld0105, out=seld0205);
+//
+//    /* a[5] or b[5] or c[5] or d[5] */
+//    Nand(a=sela0205, b=sela0205, out=selab00005);
+//    Nand(a=selb0205, b=selb0205, out=selab01005);
+//    Nand(a=selab00005, b=selab01005, out=selab02005);
+//
+//    Nand(a=selc0205, b=selc0205, out=selcd00005);
+//    Nand(a=seld0205, b=seld0205, out=selcd01005);
+//    Nand(a=selcd00005, b=selcd01005, out=selcd02005);
+//
+//    Nand(a=selab02005, b=selab02005, out=selabcd00005);
+//    Nand(a=selcd02005, b=selcd02005, out=selabcd01005);
+//    Nand(a=selabcd00005, b=selabcd01005, out=out[5]);
+//    /* END a[5], b[5], c[5], d[5], out[5] */
+//
+//    /* BEGIN a[6], b[6], c[6], d[6], out[6] */
+//    /* a[6] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela006);
+//    Nand(a=notsel0, b=notsel1, out=sela106);
+//    Nand(a=sela006, b=sela106, out=sela206);
+//
+//    Nand(a=sela206, b=a[6], out=sela0006);
+//    Nand(a=sela206, b=a[6], out=sela0106);
+//    Nand(a=sela0006, b=sela0106, out=sela0206);
+//
+//    /* b[6] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb006);
+//    Nand(a=sel[0], b=notsel1, out=selb106);
+//    Nand(a=selb006, b=selb006, out=selb206);
+//
+//    Nand(a=selb206, b=b[6], out=selb0006);
+//    Nand(a=selb206, b=b[6], out=selb0106);
+//    Nand(a=selb0006, b=selb0106, out=selb0206);
+//
+//    /* c[6] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc006);
+//    Nand(a=notsel0, b=sel[1], out=selc106);
+//    Nand(a=selc006, b=selc106, out=selc206);
+//
+//    Nand(a=selc206, b=c[6], out=selc0006);
+//    Nand(a=selc206, b=c[6], out=selc0106);
+//    Nand(a=selc0006, b=selc0106, out=selc0206);
+//
+//    /* d[6] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld006);
+//    Nand(a=sel[0], b=sel[1], out=seld106);
+//    Nand(a=seld006, b=seld106, out=seld206);
+//
+//    Nand(a=seld200, b=d[6], out=seld0006);
+//    Nand(a=seld200, b=d[6], out=seld0106);
+//    Nand(a=seld0006, b=seld0106, out=seld0206);
+//
+//    /* a[6] or b[6] or c[6] or d[6] */
+//    Nand(a=sela0206, b=sela0206, out=selab00006);
+//    Nand(a=selb0206, b=selb0206, out=selab01006);
+//    Nand(a=selab00006, b=selab01006, out=selab02006);
+//
+//    Nand(a=selc0206, b=selc0206, out=selcd00006);
+//    Nand(a=seld0206, b=seld0206, out=selcd01006);
+//    Nand(a=selcd00006, b=selcd01006, out=selcd02006);
+//
+//    Nand(a=selab02006, b=selab02006, out=selabcd00006);
+//    Nand(a=selcd02006, b=selcd02006, out=selabcd01006);
+//    Nand(a=selabcd00006, b=selabcd01006, out=out[6]);
+//    /* END a[6], b[6], c[6], d[6], out[6] */
+//
+//    /* BEGIN a[7], b[7], c[7], d[7], out[7] */
+//    /* a[7] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela007);
+//    Nand(a=notsel0, b=notsel1, out=sela107);
+//    Nand(a=sela007, b=sela107, out=sela207);
+//
+//    Nand(a=sela207, b=a[7], out=sela0007);
+//    Nand(a=sela207, b=a[7], out=sela0107);
+//    Nand(a=sela0007, b=sela0107, out=sela0207);
+//
+//    /* b[7] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb007);
+//    Nand(a=sel[0], b=notsel1, out=selb107);
+//    Nand(a=selb007, b=selb007, out=selb207);
+//
+//    Nand(a=selb207, b=b[7], out=selb0007);
+//    Nand(a=selb207, b=b[7], out=selb0107);
+//    Nand(a=selb0007, b=selb0107, out=selb0207);
+//
+//    /* c[7] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc007);
+//    Nand(a=notsel0, b=sel[1], out=selc107);
+//    Nand(a=selc007, b=selc107, out=selc207);
+//
+//    Nand(a=selc207, b=c[7], out=selc0007);
+//    Nand(a=selc207, b=c[7], out=selc0107);
+//    Nand(a=selc0007, b=selc0107, out=selc0207);
+//
+//    /* d[7] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld007);
+//    Nand(a=sel[0], b=sel[1], out=seld107);
+//    Nand(a=seld007, b=seld107, out=seld207);
+//
+//    Nand(a=seld207, b=d[7], out=seld0007);
+//    Nand(a=seld207, b=d[7], out=seld0107);
+//    Nand(a=seld0007, b=seld0107, out=seld0207);
+//
+//    /* a[7] or b[7] or c[7] or d[7] */
+//    Nand(a=sela0207, b=sela0207, out=selab00007);
+//    Nand(a=selb0207, b=selb0207, out=selab01007);
+//    Nand(a=selab00007, b=selab01007, out=selab02007);
+//
+//    Nand(a=selc0207, b=selc0207, out=selcd00007);
+//    Nand(a=seld0207, b=seld0207, out=selcd01007);
+//    Nand(a=selcd00007, b=selcd01007, out=selcd02007);
+//
+//    Nand(a=selab02007, b=selab02007, out=selabcd00007);
+//    Nand(a=selcd02007, b=selcd02007, out=selabcd01007);
+//    Nand(a=selabcd00007, b=selabcd01007, out=out[7]);
+//    /* END a[7], b[7], c[7], d[7], out[7] */
+//
+//    /* BEGIN a[8], b[8], c[8], d[8], out[8] */
+//    /* a[8] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela008);
+//    Nand(a=notsel0, b=notsel1, out=sela108);
+//    Nand(a=sela008, b=sela108, out=sela208);
+//
+//    Nand(a=sela208, b=a[8], out=sela0008);
+//    Nand(a=sela208, b=a[8], out=sela0108);
+//    Nand(a=sela0008, b=sela0108, out=sela0208);
+//
+//    /* b[8] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb008);
+//    Nand(a=sel[0], b=notsel1, out=selb108);
+//    Nand(a=selb008, b=selb008, out=selb208);
+//
+//    Nand(a=selb208, b=b[8], out=selb0008);
+//    Nand(a=selb208, b=b[8], out=selb0108);
+//    Nand(a=selb0008, b=selb0108, out=selb0208);
+//
+//    /* c[8] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc008);
+//    Nand(a=notsel0, b=sel[1], out=selc108);
+//    Nand(a=selc008, b=selc108, out=selc208);
+//
+//    Nand(a=selc208, b=c[8], out=selc0008);
+//    Nand(a=selc208, b=c[8], out=selc0108);
+//    Nand(a=selc0008, b=selc0108, out=selc0208);
+//
+//    /* d[8] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld008);
+//    Nand(a=sel[0], b=sel[1], out=seld108);
+//    Nand(a=seld008, b=seld108, out=seld208);
+//
+//    Nand(a=seld208, b=d[8], out=seld0008);
+//    Nand(a=seld208, b=d[8], out=seld0108);
+//    Nand(a=seld0008, b=seld0108, out=seld0208);
+//
+//    /* a[8] or b[8] or c[8] or d[8] */
+//    Nand(a=sela0208, b=sela0208, out=selab00008);
+//    Nand(a=selb0208, b=selb0208, out=selab01008);
+//    Nand(a=selab00008, b=selab01008, out=selab02008);
+//
+//    Nand(a=selc0208, b=selc0208, out=selcd00008);
+//    Nand(a=seld0208, b=seld0208, out=selcd01008);
+//    Nand(a=selcd00008, b=selcd01008, out=selcd02008);
+//
+//    Nand(a=selab02008, b=selab02008, out=selabcd00008);
+//    Nand(a=selcd02008, b=selcd02008, out=selabcd01008);
+//    Nand(a=selabcd00008, b=selabcd01008, out=out[8]);
+//    /* END a[8], b[8], c[8], d[8], out[8] */
+//
+//    /* BEGIN a[9], b[9], c[9], d[9], out[9] */
+//    /* a[9] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela009);
+//    Nand(a=notsel0, b=notsel1, out=sela109);
+//    Nand(a=sela009, b=sela109, out=sela209);
+//
+//    Nand(a=sela209, b=a[9], out=sela0009);
+//    Nand(a=sela209, b=a[9], out=sela0109);
+//    Nand(a=sela0009, b=sela0109, out=sela0209);
+//
+//    /* b[9] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb009);
+//    Nand(a=sel[0], b=notsel1, out=selb109);
+//    Nand(a=selb009, b=selb009, out=selb209);
+//
+//    Nand(a=selb209, b=b[9], out=selb0009);
+//    Nand(a=selb209, b=b[9], out=selb0109);
+//    Nand(a=selb0009, b=selb0109, out=selb0209);
+//
+//    /* c[9] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc009);
+//    Nand(a=notsel0, b=sel[1], out=selc109);
+//    Nand(a=selc009, b=selc109, out=selc209);
+//
+//    Nand(a=selc209, b=c[9], out=selc0009);
+//    Nand(a=selc209, b=c[9], out=selc0109);
+//    Nand(a=selc0009, b=selc0109, out=selc0209);
+//
+//    /* d[9] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld009);
+//    Nand(a=sel[0], b=sel[1], out=seld109);
+//    Nand(a=seld009, b=seld109, out=seld209);
+//
+//    Nand(a=seld209, b=d[9], out=seld0009);
+//    Nand(a=seld209, b=d[9], out=seld0109);
+//    Nand(a=seld0009, b=seld0109, out=seld0209);
+//
+//    /* a[9] or b[9] or c[9] or d[9] */
+//    Nand(a=sela0209, b=sela0209, out=selab00009);
+//    Nand(a=selb0209, b=selb0209, out=selab01009);
+//    Nand(a=selab00009, b=selab01009, out=selab02009);
+//
+//    Nand(a=selc0209, b=selc0209, out=selcd00009);
+//    Nand(a=seld0209, b=seld0209, out=selcd01009);
+//    Nand(a=selcd00009, b=selcd01009, out=selcd02009);
+//
+//    Nand(a=selab02009, b=selab02009, out=selabcd00009);
+//    Nand(a=selcd02009, b=selcd02009, out=selabcd01009);
+//    Nand(a=selabcd00009, b=selabcd01009, out=out[9]);
+//    /* END a[9], b[9], c[9], d[9], out[9] */
+//
+//    /* BEGIN a[10], b[10], c[10], d[10], out[10] */
+//    /* a[10] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela010);
+//    Nand(a=notsel0, b=notsel1, out=sela110);
+//    Nand(a=sela010, b=sela110, out=sela210);
+//
+//    Nand(a=sela210, b=a[10], out=sela0010);
+//    Nand(a=sela210, b=a[10], out=sela0110);
+//    Nand(a=sela0010, b=sela0110, out=sela0210);
+//
+//    /* b[10] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb010);
+//    Nand(a=sel[0], b=notsel1, out=selb110);
+//    Nand(a=selb010, b=selb010, out=selb210);
+//
+//    Nand(a=selb210, b=b[10], out=selb0010);
+//    Nand(a=selb210, b=b[10], out=selb0110);
+//    Nand(a=selb0010, b=selb0110, out=selb0210);
+//
+//    /* c[10] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc010);
+//    Nand(a=notsel0, b=sel[1], out=selc110);
+//    Nand(a=selc010, b=selc110, out=selc210);
+//
+//    Nand(a=selc210, b=c[10], out=selc0010);
+//    Nand(a=selc210, b=c[10], out=selc0110);
+//    Nand(a=selc0010, b=selc0110, out=selc0210);
+//
+//    /* d[10] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld010);
+//    Nand(a=sel[0], b=sel[1], out=seld110);
+//    Nand(a=seld010, b=seld110, out=seld210);
+//
+//    Nand(a=seld210, b=d[10], out=seld0010);
+//    Nand(a=seld210, b=d[10], out=seld0110);
+//    Nand(a=seld0010, b=seld0110, out=seld0210);
+//
+//    /* a[10] or b[10] or c[10] or d[10] */
+//    Nand(a=sela0200, b=sela0200, out=selab00010);
+//    Nand(a=selb0200, b=selb0200, out=selab01010);
+//    Nand(a=selab00000, b=selab01000, out=selab02010);
+//
+//    Nand(a=selc0210, b=selc0210, out=selcd00010);
+//    Nand(a=seld0210, b=seld0210, out=selcd01010);
+//    Nand(a=selcd00010, b=selcd01010, out=selcd02010);
+//
+//    Nand(a=selab02010, b=selab02010, out=selabcd00010);
+//    Nand(a=selcd02010, b=selcd02010, out=selabcd01010);
+//    Nand(a=selabcd00010, b=selabcd01010, out=out[10]);
+//    /* END a[10], b[10], c[10], d[10], out[10] */
+//
+//    /* BEGIN a[11], b[11], c[11], d[11], out[11] */
+//    /* a[11] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela011);
+//    Nand(a=notsel0, b=notsel1, out=sela111);
+//    Nand(a=sela001, b=sela101, out=sela211);
+//
+//    Nand(a=sela201, b=a[11], out=sela0011);
+//    Nand(a=sela201, b=a[11], out=sela0111);
+//    Nand(a=sela0011, b=sela0111, out=sela0211);
+//
+//    /* b[11] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb011);
+//    Nand(a=sel[0], b=notsel1, out=selb111);
+//    Nand(a=selb011, b=selb011, out=selb211);
+//
+//    Nand(a=selb211, b=b[11], out=selb0011);
+//    Nand(a=selb211, b=b[11], out=selb0111);
+//    Nand(a=selb0011, b=selb0111, out=selb0211);
+//
+//    /* c[11] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc011);
+//    Nand(a=notsel0, b=sel[1], out=selc111);
+//    Nand(a=selc011, b=selc111, out=selc211);
+//
+//    Nand(a=selc211, b=c[11], out=selc0011);
+//    Nand(a=selc211, b=c[11], out=selc0111);
+//    Nand(a=selc0011, b=selc0111, out=selc0211);
+//
+//    /* d[11] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld011);
+//    Nand(a=sel[0], b=sel[1], out=seld111);
+//    Nand(a=seld011, b=seld111, out=seld211);
+//
+//    Nand(a=seld211, b=d[11], out=seld0011);
+//    Nand(a=seld211, b=d[11], out=seld0111);
+//    Nand(a=seld0011, b=seld0111, out=seld0211);
+//
+//    /* a[11] or b[11] or c[11] or d[11] */
+//    Nand(a=sela0211, b=sela0211, out=selab00011);
+//    Nand(a=selb0211, b=selb0211, out=selab01011);
+//    Nand(a=selab00011, b=selab01011, out=selab02011);
+//
+//    Nand(a=selc0211, b=selc0211, out=selcd00011);
+//    Nand(a=seld0211, b=seld0211, out=selcd01011);
+//    Nand(a=selcd00011, b=selcd01011, out=selcd02011);
+//
+//    Nand(a=selab02011, b=selab02011, out=selabcd00011);
+//    Nand(a=selcd02011, b=selcd02011, out=selabcd01011);
+//    Nand(a=selabcd00011, b=selabcd01011, out=out[11]);
+//    /* END a[11], b[11], c[11], d[11], out[11] */
+//
+//    /* BEGIN a[12], b[12], c[12], d[12], out[12] */
+//    /* a[12] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela012);
+//    Nand(a=notsel0, b=notsel1, out=sela112);
+//    Nand(a=sela000, b=sela100, out=sela212);
+//
+//    Nand(a=sela212, b=a[12], out=sela0012);
+//    Nand(a=sela212, b=a[12], out=sela0112);
+//    Nand(a=sela0012, b=sela0112, out=sela0212);
+//
+//    /* b[12] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb012);
+//    Nand(a=sel[0], b=notsel1, out=selb112);
+//    Nand(a=selb012, b=selb012, out=selb212);
+//
+//    Nand(a=selb200, b=b[12], out=selb0012);
+//    Nand(a=selb200, b=b[12], out=selb0112);
+//    Nand(a=selb0012, b=selb0112, out=selb0212);
+//
+//    /* c[12] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc012);
+//    Nand(a=notsel0, b=sel[1], out=selc112);
+//    Nand(a=selc012, b=selc112, out=selc212);
+//
+//    Nand(a=selc212, b=c[12], out=selc0012);
+//    Nand(a=selc212, b=c[12], out=selc0112);
+//    Nand(a=selc0012, b=selc0112, out=selc0212);
+//
+//    /* d[12] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld012);
+//    Nand(a=sel[0], b=sel[1], out=seld112);
+//    Nand(a=seld012, b=seld112, out=seld212);
+//
+//    Nand(a=seld212, b=d[12], out=seld0012);
+//    Nand(a=seld212, b=d[12], out=seld0112);
+//    Nand(a=seld0012, b=seld0112, out=seld0212);
+//
+//    /* a[12] or b[12] or c[12] or d[12] */
+//    Nand(a=sela0212, b=sela0212, out=selab00012);
+//    Nand(a=selb0212, b=selb0212, out=selab01012);
+//    Nand(a=selab00012, b=selab01012, out=selab02012);
+//
+//    Nand(a=selc0212, b=selc0212, out=selcd00012);
+//    Nand(a=seld0212, b=seld0212, out=selcd01012);
+//    Nand(a=selcd00012, b=selcd01012, out=selcd02012);
+//
+//    Nand(a=selab02012, b=selab02012, out=selabcd00012);
+//    Nand(a=selcd02012, b=selcd02012, out=selabcd01012);
+//    Nand(a=selabcd00012, b=selabcd01012, out=out[12]);
+//    /* END a[12], b[12], c[12], d[12], out[12] */
+//
+//    /* BEGIN a[13], b[13], c[13], d[13], out[13] */
+//    /* a[13] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela013);
+//    Nand(a=notsel0, b=notsel1, out=sela113);
+//    Nand(a=sela000, b=sela100, out=sela213);
+//
+//    Nand(a=sela213, b=a[13], out=sela0013);
+//    Nand(a=sela213, b=a[13], out=sela0113);
+//    Nand(a=sela0013, b=sela0113, out=sela0213);
+//
+//    /* b[13] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb013);
+//    Nand(a=sel[0], b=notsel1, out=selb113);
+//    Nand(a=selb013, b=selb013, out=selb213);
+//
+//    Nand(a=selb213, b=b[13], out=selb0013);
+//    Nand(a=selb213, b=b[13], out=selb0113);
+//    Nand(a=selb0013, b=selb0113, out=selb0213);
+//
+//    /* c[13] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc013);
+//    Nand(a=notsel0, b=sel[1], out=selc113);
+//    Nand(a=selc013, b=selc113, out=selc213);
+//
+//    Nand(a=selc213, b=c[13], out=selc0013);
+//    Nand(a=selc213, b=c[13], out=selc0113);
+//    Nand(a=selc0013, b=selc0113, out=selc0213);
+//
+//    /* d[13] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld013);
+//    Nand(a=sel[0], b=sel[1], out=seld113);
+//    Nand(a=seld013, b=seld113, out=seld213);
+//
+//    Nand(a=seld213, b=d[13], out=seld0013);
+//    Nand(a=seld213, b=d[13], out=seld0113);
+//    Nand(a=seld0013, b=seld0113, out=seld0213);
+//
+//    /* a[13] or b[13] or c[13] or d[13] */
+//    Nand(a=sela0213, b=sela0213, out=selab00013);
+//    Nand(a=selb0213, b=selb0213, out=selab01013);
+//    Nand(a=selab00013, b=selab01013, out=selab02013);
+//
+//    Nand(a=selc0213, b=selc0213, out=selcd00013);
+//    Nand(a=seld0213, b=seld0213, out=selcd01013);
+//    Nand(a=selcd00013, b=selcd01013, out=selcd02013);
+//
+//    Nand(a=selab02013, b=selab02013, out=selabcd00013);
+//    Nand(a=selcd02013, b=selcd02013, out=selabcd01013);
+//    Nand(a=selabcd00013, b=selabcd01013, out=out[13]);
+//    /* END a[13], b[13], c[13], d[13], out[13] */
+//
+//    /* BEGIN a[14], b[14], c[14], d[14], out[14] */
+//    /* a[14] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela014);
+//    Nand(a=notsel0, b=notsel1, out=sela114);
+//    Nand(a=sela014, b=sela114, out=sela214);
+//
+//    Nand(a=sela214, b=a[14], out=sela0014);
+//    Nand(a=sela214, b=a[14], out=sela0114);
+//    Nand(a=sela0014, b=sela0114, out=sela0214);
+//
+//    /* b[14] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb014);
+//    Nand(a=sel[0], b=notsel1, out=selb114);
+//    Nand(a=selb014, b=selb014, out=selb214);
+//
+//    Nand(a=selb214, b=b[14], out=selb0014);
+//    Nand(a=selb214, b=b[14], out=selb0114);
+//    Nand(a=selb0014, b=selb0114, out=selb0214);
+//
+//    /* c[14] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc014);
+//    Nand(a=notsel0, b=sel[1], out=selc114);
+//    Nand(a=selc014, b=selc114, out=selc214);
+//
+//    Nand(a=selc214, b=c[14], out=selc0014);
+//    Nand(a=selc214, b=c[14], out=selc0114);
+//    Nand(a=selc0014, b=selc0114, out=selc0214);
+//
+//    /* d[14] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld014);
+//    Nand(a=sel[0], b=sel[1], out=seld114);
+//    Nand(a=seld014, b=seld114, out=seld214);
+//
+//    Nand(a=seld214, b=d[14], out=seld0014);
+//    Nand(a=seld214, b=d[14], out=seld0114);
+//    Nand(a=seld0014, b=seld0114, out=seld0214);
+//
+//    /* a[14] or b[14] or c[14] or d[14] */
+//    Nand(a=sela0214, b=sela0214, out=selab00014);
+//    Nand(a=selb0214, b=selb0214, out=selab01014);
+//    Nand(a=selab00014, b=selab01014, out=selab02014);
+//
+//    Nand(a=selc0214, b=selc0214, out=selcd00014);
+//    Nand(a=seld0214, b=seld0214, out=selcd01014);
+//    Nand(a=selcd00014, b=selcd01014, out=selcd02014);
+//
+//    Nand(a=selab02014, b=selab02014, out=selabcd00014);
+//    Nand(a=selcd02014, b=selcd02014, out=selabcd01014);
+//    Nand(a=selabcd00014, b=selabcd01014, out=out[14]);
+//    /* END a[14], b[14], c[14], d[14], out[14] */
+//
+//    /* BEGIN a[15], b[15], c[15], d[15], out[15] */
+//    /* a[15] if sel 00 */ 
+//    Nand(a=notsel0, b=notsel1, out=sela015);
+//    Nand(a=notsel0, b=notsel1, out=sela115);
+//    Nand(a=sela000, b=sela100, out=sela215);
+//
+//    Nand(a=sela215, b=a[15], out=sela0015);
+//    Nand(a=sela215, b=a[15], out=sela0115);
+//    Nand(a=sela0015, b=sela0115, out=sela0215);
+//
+//    /* b[15] if sel 01 */
+//    Nand(a=sel[0], b=notsel1, out=selb015);
+//    Nand(a=sel[0], b=notsel1, out=selb115);
+//    Nand(a=selb015, b=selb015, out=selb215);
+//
+//    Nand(a=selb215, b=b[15], out=selb0015);
+//    Nand(a=selb215, b=b[15], out=selb0115);
+//    Nand(a=selb0015, b=selb0115, out=selb0215);
+//
+//    /* c[15] if sel 10 */
+//    Nand(a=notsel0, b=sel[1], out=selc015);
+//    Nand(a=notsel0, b=sel[1], out=selc115);
+//    Nand(a=selc015, b=selc115, out=selc215);
+//
+//    Nand(a=selc215, b=c[15], out=selc0015);
+//    Nand(a=selc215, b=c[15], out=selc0115);
+//    Nand(a=selc0015, b=selc0115, out=selc0215);
+//
+//    /* d[15] if sel 11 */
+//    Nand(a=sel[0], b=sel[1], out=seld015);
+//    Nand(a=sel[0], b=sel[1], out=seld115);
+//    Nand(a=seld015, b=seld115, out=seld215);
+//
+//    Nand(a=seld215, b=d[15], out=seld0015);
+//    Nand(a=seld215, b=d[15], out=seld0115);
+//    Nand(a=seld0015, b=seld0115, out=seld0215);
+//
+//    /* a[15] or b[15] or c[15] or d[15] */
+//    Nand(a=sela0215, b=sela0215, out=selab00015);
+//    Nand(a=selb0215, b=selb0215, out=selab01015);
+//    Nand(a=selab00015, b=selab01015, out=selab02015);
+//
+//    Nand(a=selc0215, b=selc0215, out=selcd00015);
+//    Nand(a=seld0215, b=seld0215, out=selcd01015);
+//    Nand(a=selcd00015, b=selcd01015, out=selcd02015);
+//
+//    Nand(a=selab02015, b=selab02015, out=selabcd00015);
+//    Nand(a=selcd02015, b=selcd02015, out=selabcd01015);
+//    Nand(a=selabcd00015, b=selabcd01015, out=out[15]);
+//    /* END a[15], b[15], c[15], d[15], out[15] */
+}

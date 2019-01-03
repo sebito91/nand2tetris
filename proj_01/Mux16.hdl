@@ -1,0 +1,245 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux16.hdl
+
+/**
+ * 16-bit multiplexor: 
+ * for i = 0..15 out[i] = a[i] if sel == 0 
+ *                        b[i] if sel == 1
+ */
+
+CHIP Mux16 {
+    IN a[16], b[16], sel;
+    OUT out[16];
+
+    PARTS:
+    Mux(a=a[0], b=b[0], sel=sel, out=out[0]);
+    Mux(a=a[1], b=b[1], sel=sel, out=out[1]);
+    Mux(a=a[2], b=b[2], sel=sel, out=out[2]);
+    Mux(a=a[3], b=b[3], sel=sel, out=out[3]);
+    Mux(a=a[4], b=b[4], sel=sel, out=out[4]);
+    Mux(a=a[5], b=b[5], sel=sel, out=out[5]);
+    Mux(a=a[6], b=b[6], sel=sel, out=out[6]);
+    Mux(a=a[7], b=b[7], sel=sel, out=out[7]);
+    Mux(a=a[8], b=b[8], sel=sel, out=out[8]);
+    Mux(a=a[9], b=b[9], sel=sel, out=out[9]);
+    Mux(a=a[10], b=b[10], sel=sel, out=out[10]);
+    Mux(a=a[11], b=b[11], sel=sel, out=out[11]);
+    Mux(a=a[12], b=b[12], sel=sel, out=out[12]);
+    Mux(a=a[13], b=b[13], sel=sel, out=out[13]);
+    Mux(a=a[14], b=b[14], sel=sel, out=out[14]);
+    Mux(a=a[15], b=b[15], sel=sel, out=out[15]);
+    
+//    /* NAND Implmentation */
+//    /* NOT sel */
+//    Nand(a=sel, b=sel, out=notsel);
+//
+//    /* a[0], b[0], out[0] */
+//    Nand(a=a[0], b=notsel, out=c000); 
+//    Nand(a=a[0], b=notsel, out=c100);
+//    Nand(a=c000, b=c100, out=c0000);
+//
+//    Nand(a=sel, b=b[0], out=c200);
+//    Nand(a=sel, b=b[0], out=c300);
+//    Nand(a=c200, b=c300, out=c0100);
+//
+//    Nand(a=c0000, b=c0000, out=c00000);
+//    Nand(a=c0100, b=c0100, out=c00100);
+//    Nand(a=c00000, b=c00100, out=out[0]);
+//
+//    /* a[1], b[1], out[1] */
+//    Nand(a=a[1], b=notsel, out=c001); 
+//    Nand(a=a[1], b=notsel, out=c101);
+//    Nand(a=c001, b=c101, out=c0001);
+//
+//    Nand(a=sel, b=b[1], out=c201);
+//    Nand(a=sel, b=b[1], out=c301);
+//    Nand(a=c201, b=c301, out=c0101);
+//
+//    Nand(a=c0001, b=c0001, out=c00001);
+//    Nand(a=c0101, b=c0101, out=c00101);
+//    Nand(a=c00001, b=c00101, out=out[1]);
+//
+//    /* a[2], b[2], out[2] */
+//    Nand(a=a[2], b=notsel, out=c002); 
+//    Nand(a=a[2], b=notsel, out=c102);
+//    Nand(a=c002, b=c102, out=c0002);
+//
+//    Nand(a=sel, b=b[2], out=c202);
+//    Nand(a=sel, b=b[2], out=c302);
+//    Nand(a=c202, b=c302, out=c0102);
+//
+//    Nand(a=c0002, b=c0002, out=c00002);
+//    Nand(a=c0102, b=c0102, out=c00102);
+//    Nand(a=c00002, b=c00102, out=out[2]);
+//
+//    /* a[3], b[3], out[3] */
+//    Nand(a=a[3], b=notsel, out=c003); 
+//    Nand(a=a[3], b=notsel, out=c103);
+//    Nand(a=c003, b=c103, out=c0003);
+//
+//    Nand(a=sel, b=b[3], out=c203);
+//    Nand(a=sel, b=b[3], out=c303);
+//    Nand(a=c203, b=c303, out=c0103);
+//
+//    Nand(a=c0003, b=c0003, out=c00003);
+//    Nand(a=c0103, b=c0100, out=c00103);
+//    Nand(a=c00003, b=c00103, out=out[3]);
+//
+//    /* a[4], b[4], out[4] */
+//    Nand(a=a[4], b=notsel, out=c004); 
+//    Nand(a=a[4], b=notsel, out=c104);
+//    Nand(a=c004, b=c104, out=c0004);
+//
+//    Nand(a=sel, b=b[4], out=c204);
+//    Nand(a=sel, b=b[4], out=c304);
+//    Nand(a=c204, b=c304, out=c0104);
+//
+//    Nand(a=c0004, b=c0004, out=c00004);
+//    Nand(a=c0104, b=c0104, out=c00104);
+//    Nand(a=c00004, b=c00104, out=out[4]);
+//
+//    /* a[5], b[5], out[5] */
+//    Nand(a=a[5], b=notsel, out=c005); 
+//    Nand(a=a[5], b=notsel, out=c105);
+//    Nand(a=c005, b=c105, out=c0005);
+//
+//    Nand(a=sel, b=b[5], out=c205);
+//    Nand(a=sel, b=b[5], out=c305);
+//    Nand(a=c205, b=c305, out=c0105);
+//
+//    Nand(a=c0005, b=c0005, out=c00005);
+//    Nand(a=c0105, b=c0105, out=c00105);
+//    Nand(a=c00005, b=c00105, out=out[5]);
+//
+//    /* a[6], b[6], out[6] */
+//    Nand(a=a[6], b=notsel, out=c006); 
+//    Nand(a=a[6], b=notsel, out=c106);
+//    Nand(a=c006, b=c106, out=c0006);
+//
+//    Nand(a=sel, b=b[6], out=c206);
+//    Nand(a=sel, b=b[6], out=c306);
+//    Nand(a=c206, b=c306, out=c0106);
+//
+//    Nand(a=c0006, b=c0006, out=c00006);
+//    Nand(a=c0106, b=c0106, out=c00106);
+//    Nand(a=c00006, b=c00106, out=out[6]);
+//
+//    /* a[7], b[7], out[7] */
+//    Nand(a=a[7], b=notsel, out=c007); 
+//    Nand(a=a[7], b=notsel, out=c107);
+//    Nand(a=c007, b=c107, out=c0007);
+//
+//    Nand(a=sel, b=b[7], out=c207);
+//    Nand(a=sel, b=b[7], out=c307);
+//    Nand(a=c207, b=c307, out=c0107);
+//
+//    Nand(a=c0007, b=c0007, out=c00007);
+//    Nand(a=c0107, b=c0107, out=c00107);
+//    Nand(a=c00007, b=c00107, out=out[7]);
+//
+//    /* a[8], b[8], out[8] */
+//    Nand(a=a[8], b=notsel, out=c008); 
+//    Nand(a=a[8], b=notsel, out=c108);
+//    Nand(a=c008, b=c108, out=c0008);
+//
+//    Nand(a=sel, b=b[8], out=c208);
+//    Nand(a=sel, b=b[8], out=c308);
+//    Nand(a=c208, b=c308, out=c0108);
+//
+//    Nand(a=c0008, b=c0008, out=c00008);
+//    Nand(a=c0108, b=c0108, out=c00108);
+//    Nand(a=c00008, b=c00108, out=out[8]);
+//
+//    /* a[9], b[9], out[9] */
+//    Nand(a=a[9], b=notsel, out=c009); 
+//    Nand(a=a[9], b=notsel, out=c109);
+//    Nand(a=c009, b=c109, out=c0009);
+//
+//    Nand(a=sel, b=b[9], out=c209);
+//    Nand(a=sel, b=b[9], out=c309);
+//    Nand(a=c209, b=c309, out=c0109);
+//
+//    Nand(a=c0009, b=c0009, out=c00009);
+//    Nand(a=c0109, b=c0109, out=c00109);
+//    Nand(a=c00009, b=c00109, out=out[9]);
+//
+//    /* a[10], b[10], out[10] */
+//    Nand(a=a[10], b=notsel, out=c010); 
+//    Nand(a=a[10], b=notsel, out=c110);
+//    Nand(a=c010, b=c110, out=c0010);
+//
+//    Nand(a=sel, b=b[10], out=c210);
+//    Nand(a=sel, b=b[10], out=c310);
+//    Nand(a=c210, b=c310, out=c0110);
+//
+//    Nand(a=c0010, b=c0010, out=c00010);
+//    Nand(a=c0110, b=c0110, out=c00110);
+//    Nand(a=c00010, b=c00110, out=out[10]);
+//
+//    /* a[11], b[11], out[11] */
+//    Nand(a=a[11], b=notsel, out=c011); 
+//    Nand(a=a[11], b=notsel, out=c111);
+//    Nand(a=c011, b=c111, out=c0011);
+//
+//    Nand(a=sel, b=b[11], out=c211);
+//    Nand(a=sel, b=b[11], out=c311);
+//    Nand(a=c211, b=c311, out=c0111);
+//
+//    Nand(a=c0011, b=c0011, out=c00011);
+//    Nand(a=c0111, b=c0111, out=c00111);
+//    Nand(a=c00011, b=c00111, out=out[11]);
+//
+//    /* a[12], b[12], out[12] */
+//    Nand(a=a[12], b=notsel, out=c012); 
+//    Nand(a=a[12], b=notsel, out=c112);
+//    Nand(a=c012, b=c112, out=c0012);
+//
+//    Nand(a=sel, b=b[12], out=c212);
+//    Nand(a=sel, b=b[12], out=c312);
+//    Nand(a=c212, b=c312, out=c0112);
+//
+//    Nand(a=c0012, b=c0012, out=c00012);
+//    Nand(a=c0112, b=c0112, out=c00112);
+//    Nand(a=c00012, b=c00112, out=out[12]);
+//
+//    /* a[13], b[13], out[13] */
+//    Nand(a=a[13], b=notsel, out=c013); 
+//    Nand(a=a[13], b=notsel, out=c113);
+//    Nand(a=c013, b=c113, out=c0013);
+//
+//    Nand(a=sel, b=b[13], out=c213);
+//    Nand(a=sel, b=b[13], out=c313);
+//    Nand(a=c213, b=c313, out=c0113);
+//
+//    Nand(a=c0013, b=c0013, out=c00013);
+//    Nand(a=c0113, b=c0113, out=c00113);
+//    Nand(a=c00013, b=c00113, out=out[13]);
+//
+//    /* a[14], b[14], out[14] */
+//    Nand(a=a[14], b=notsel, out=c014); 
+//    Nand(a=a[14], b=notsel, out=c114);
+//    Nand(a=c014, b=c114, out=c0014);
+//
+//    Nand(a=sel, b=b[14], out=c214);
+//    Nand(a=sel, b=b[14], out=c314);
+//    Nand(a=c214, b=c314, out=c0114);
+//
+//    Nand(a=c0014, b=c0014, out=c00014);
+//    Nand(a=c0114, b=c0114, out=c00114);
+//    Nand(a=c00014, b=c00114, out=out[14]);
+//
+//    /* a[15], b[15], out[15] */
+//    Nand(a=a[15], b=notsel, out=c015); 
+//    Nand(a=a[15], b=notsel, out=c115);
+//    Nand(a=c015, b=c115, out=c0015);
+//
+//    Nand(a=sel, b=b[15], out=c215);
+//    Nand(a=sel, b=b[15], out=c315);
+//    Nand(a=c215, b=c315, out=c0115);
+//
+//    Nand(a=c0015, b=c0015, out=c00015);
+//    Nand(a=c0115, b=c0115, out=c00115);
+//    Nand(a=c00015, b=c00115, out=out[15]);
+}

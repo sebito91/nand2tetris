@@ -1,0 +1,49 @@
+# Project 6 -- Assembler
+
+## NOTES
+
+I've continued to use golang for my implementation and have included a Makefile that _should_ build the binary
+required for the proper environment. You will need to have golang installed as a prerequisite (the linux
+cluster has this installed), and simply running `make` should build the binary for you.
+
+https://piazza.com/class/jmrqk4jynq247k?cid=54
+
+I have included a built version of the binary for linux (for the cluster), but if you're using another
+environment please consult the Makefile. If this doesn't work, please let me know and
+I will be happy to help out.
+
+### Functionality
+
+The binary accepts a space-delimited list of filenames and processes each in turn. If the
+file is not of type `*.asm`, then process exits without processing any files. If all files pass the validation
+check in the beginning, each will be processed sequentially.
+
+Output will be in the form of `*.hack` in the folder where the source was provided. The output files
+should contains valid Hack binary representation of the assembly code provided.
+
+### Design/Layout
+
+I've split the functionality into two sub-packages from the initial Project 0 design: lexer and parser.
+
+The `lexer` handles the initial processing of the symbol table (e.g. creating it to begin with), as well
+as the initial two passes to create the reference points for any labels used.
+
+The `parser` package handles the actual split of assembly language into individual A- and C-instructions
+depending on the provided line. These follow along the Hack protocol lines and should be completely
+functionaly (and feature-complete) with the `Assembler.sh` provided Hack code. In our example
+here we do distinguish between `A+D` and `D+A` and support both :D
+
+### Files
+
+- main.go          -- primary source code for binary
+- assembler        -- compiled, statically linked binary without external dependencies beyond stdlib
+- lexer/lexer.go   -- lexical analysis of the code, creating symbol tables, etc
+- parser/parser.go -- process each individual line of assembly code into valid Hack binary
+- parser/utils.go  -- utility code to help in the assembly language translation to binary
+- Makefile         -- file to help clean and/or build binary
+- README           -- this file
+
+### Building the code
+
+Using the `make` syntax, based on your OS you'll see the binary in ./build. If windows, it _should_ compile to
+`spaces.exe` while non-windows builds will be named `assembler`
